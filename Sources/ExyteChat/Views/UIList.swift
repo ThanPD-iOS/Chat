@@ -525,7 +525,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
             return conf
         }
         
-        private func toContextualAction(_ item: SwipeActionable, message:Message) -> UIContextualAction {
+        private func toContextualAction(_ item: SwipeActionable, message: ChatMessage) -> UIContextualAction {
             let ca = UIContextualAction(style: .normal, title: nil) { (action, sourceView, completionHandler) in
                 item.action(message, self.viewModel.messageMenuAction())
                 completionHandler(true)
@@ -620,7 +620,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
 
     func formatRow(_ row: MessageRow) -> String {
         String(
-            "id: \(row.id) text: \(row.message.text) date: \(row.message.createdAt) position in user group: \(row.positionInUserGroup) position in messages section: \(row.positionInMessagesSection)"
+            "id: \(row.id) text: \(row.message.content) date: \(row.message.createdAt) position in user group: \(row.positionInUserGroup) position in messages section: \(row.positionInMessagesSection)"
         )
     }
 

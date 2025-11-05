@@ -10,7 +10,7 @@ final actor MockChatInteractor {
     
     private lazy var chatData = MockChatData()
 
-    @Published private(set) var messages: [Message] = []
+    @Published private(set) var messages: [ChatMessage] = []
 
     private let isActive: Bool
     private var isLoading = false
@@ -142,7 +142,7 @@ final actor MockChatInteractor {
 }
 
 private extension MockChatInteractor {
-    func generateStartMessages() -> [Message] {
+    func generateStartMessages() -> [ChatMessage] {
 //        defer {
 //            lastDate = lastDate.addingTimeInterval(-(60*60*24))
 //        }
@@ -161,7 +161,7 @@ private extension MockChatInteractor {
 //                lhs.createdAt < rhs.createdAt
 //            }
         
-        return [Message(id: UUID().uuidString, messageRole: .assistant)]
+        return [ChatMessage(id: UUID().uuidString, messageRole: .assistant)]
     }
 
     func generateNewMessage() {

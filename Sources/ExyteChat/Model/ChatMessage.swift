@@ -12,37 +12,18 @@ public enum MessageRole: Int, Codable, Sendable {
     case assistant
 }
 
-class ChatMessage: Identifiable, Equatable, ObservableObject {
-    static func == (lhs: ChatMessage, rhs: ChatMessage) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    var id: String = UUID().uuidString
-    var conversationId: UUID
-    let messageRole: MessageRole
-    
-    var content: String
-    var isLoading: Bool = false
-    var isFailedToSend: Bool = false
-    var isGenerating: Bool = false
-    
-    init(id: String = UUID().uuidString, content: String, messageRole: MessageRole,
-         isLoading: Bool = false, conversationId: UUID, isGenerating: Bool = false) {
-        self.id = id
-        self.content = content
-        self.messageRole = messageRole
-        self.isLoading = isLoading
-        self.conversationId = conversationId
-        self.isGenerating = isGenerating
-    }
-}
-
-public struct Message: Identifiable, Hashable, Sendable {
+public struct ChatMessage: Identifiable, Hashable, Sendable {
     public var id: String
+    public var conversationId: UUID
     public let messageRole: MessageRole
+    
+    public var content: String
+    public var isLoading: Bool = false
+    public var isFailedToSend: Bool = false
+    public var isGenerating: Bool = false
+    
+    // Not use
     public var createdAt: Date
-
-    public var text: String
     public var attachments: [Attachment]
     public var reactions: [Reaction]
     public var giphyMediaId: String?
@@ -51,8 +32,12 @@ public struct Message: Identifiable, Hashable, Sendable {
 
     public init(id: String,
                 messageRole: MessageRole,
+                conversationId: UUID = UUID(),
+                content: String = "",
+                isLoading: Bool = false,
+                isFailedToSend: Bool = false,
+                isGenerating: Bool = false,
                 createdAt: Date = Date(),
-                text: String = "",
                 attachments: [Attachment] = [],
                 giphyMediaId: String? = nil,
                 reactions: [Reaction] = [],
@@ -60,9 +45,14 @@ public struct Message: Identifiable, Hashable, Sendable {
                 replyMessage: ReplyMessage? = nil) {
 
         self.id = id
+        self.conversationId = conversationId
         self.messageRole = messageRole
+        self.content = content
+        self.isLoading = isLoading
+        self.isFailedToSend = isFailedToSend
+        self.isGenerating = isGenerating
+        
         self.createdAt = createdAt
-        self.text = text
         self.attachments = attachments
         self.giphyMediaId = giphyMediaId
         self.reactions = reactions
@@ -71,12 +61,16 @@ public struct Message: Identifiable, Hashable, Sendable {
     }
 }
 
-extension Message: Equatable {
-    public static func == (lhs: Message, rhs: Message) -> Bool {
+extension ChatMessage: Equatable {
+    public static func == (lhs: ChatMessage, rhs: ChatMessage) -> Bool {
         lhs.id == rhs.id &&
+        lhs.conversationId == rhs.conversationId &&
+        lhs.isLoading == rhs.isLoading &&
+        lhs.isFailedToSend == rhs.isFailedToSend &&
+        lhs.isGenerating == rhs.isGenerating &&
         lhs.messageRole == rhs.messageRole &&
         lhs.createdAt == rhs.createdAt &&
-        lhs.text == rhs.text &&
+        lhs.content == rhs.content &&
         lhs.giphyMediaId == rhs.giphyMediaId &&
         lhs.attachments == rhs.attachments &&
         lhs.reactions == rhs.reactions &&
@@ -130,14 +124,14 @@ public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
         self.recording = recording
     }
 
-    func toMessage() -> Message {
-        Message(id: id, messageRole: messageRole, createdAt: createdAt, text: text, attachments: attachments, recording: recording)
+    func toMessage() -> ChatMessage {
+        ChatMessage(id: id, messageRole: messageRole, content: text, createdAt: createdAt, attachments: attachments, recording: recording)
     }
 }
 
-public extension Message {
+public extension ChatMessage {
 
     func toReplyMessage() -> ReplyMessage {
-        ReplyMessage(id: id, messageRole: messageRole, createdAt: createdAt, text: text, attachments: attachments, recording: recording)
+        ReplyMessage(id: id, messageRole: messageRole, createdAt: createdAt, text: content, attachments: attachments, recording: recording)
     }
 }

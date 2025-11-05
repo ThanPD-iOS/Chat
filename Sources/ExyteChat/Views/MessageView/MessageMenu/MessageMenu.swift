@@ -40,7 +40,7 @@ struct MessageMenu<MainButton: View, ActionEnum: MessageMenuAction>: View {
     let verticalSpacing:CGFloat = 0
     
     /// The message whose menu we're presenting
-    var message: Message
+    var message: ChatMessage
     /// The original message frame (the row / cell)
     var cellFrame: CGRect
     /// Leading / Trailing message alignment

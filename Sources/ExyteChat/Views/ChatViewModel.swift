@@ -41,21 +41,21 @@ final class ChatViewModel: ObservableObject {
         didSendMessage(message)
     }
 
-    func messageMenuAction() -> (Message, DefaultMessageMenuAction) -> Void {
+    func messageMenuAction() -> (ChatMessage, DefaultMessageMenuAction) -> Void {
         { [weak self] message, action in
             self?.messageMenuActionInternal(message: message, action: action)
         }
     }
 
-    func messageMenuActionInternal(message: Message, action: DefaultMessageMenuAction) {
+    func messageMenuActionInternal(message: ChatMessage, action: DefaultMessageMenuAction) {
         switch action {
         case .copy:
-            UIPasteboard.general.string = message.text
+            UIPasteboard.general.string = message.content
         case .reply:
             inputViewModel?.attachments.replyMessage = message.toReplyMessage()
             globalFocusState?.focus = .uuid(inputFieldId)
         case .edit(let saveClosure):
-            inputViewModel?.text = message.text
+            inputViewModel?.text = message.content
             inputViewModel?.edit(saveClosure)
             globalFocusState?.focus = .uuid(inputFieldId)
         }

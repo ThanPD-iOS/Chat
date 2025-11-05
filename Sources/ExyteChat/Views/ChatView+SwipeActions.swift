@@ -26,8 +26,8 @@ public extension ChatView {
 
 protocol SwipeActionable {
     func render(type: ChatType) -> UIImage
-    var action: (Message, @escaping (Message, DefaultMessageMenuAction) -> Void) -> Void { get }
-    var activeFor: (Message) -> Bool { get }
+    var action: (ChatMessage, @escaping (ChatMessage, DefaultMessageMenuAction) -> Void) -> Void { get }
+    var activeFor: (ChatMessage) -> Bool { get }
     var background: Color? { get }
 }
 
@@ -49,19 +49,19 @@ struct ListSwipeAction {
 }
 
 public struct SwipeAction<V: View>: SwipeActionable {
-    let action: (Message, @escaping (Message, DefaultMessageMenuAction) -> Void) -> Void
-    let activeFor: (Message) -> Bool
+    let action: (ChatMessage, @escaping (ChatMessage, DefaultMessageMenuAction) -> Void) -> Void
+    let activeFor: (ChatMessage) -> Bool
     let content: () -> V
     let background: Color?
     
-    public init(@ViewBuilder content: @escaping () -> V, background: Color? = nil, activeFor: @escaping (Message) -> Bool = { _ in true}, action: @escaping (Message, @escaping (Message, DefaultMessageMenuAction) -> Void) -> Void) {
+    public init(@ViewBuilder content: @escaping () -> V, background: Color? = nil, activeFor: @escaping (ChatMessage) -> Bool = { _ in true}, action: @escaping (ChatMessage, @escaping (ChatMessage, DefaultMessageMenuAction) -> Void) -> Void) {
         self.content = content
         self.action = action
         self.activeFor = activeFor
         self.background = background
     }
     
-    public init(action: @escaping (Message, @escaping (Message, DefaultMessageMenuAction) -> Void) -> Void, activeFor: @escaping (Message) -> Bool = { _ in true}, background: Color? = nil, @ViewBuilder content: @escaping () -> V) {
+    public init(action: @escaping (ChatMessage, @escaping (ChatMessage, DefaultMessageMenuAction) -> Void) -> Void, activeFor: @escaping (ChatMessage) -> Bool = { _ in true}, background: Color? = nil, @ViewBuilder content: @escaping () -> V) {
         self.content = content
         self.action = action
         self.activeFor = activeFor

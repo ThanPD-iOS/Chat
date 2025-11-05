@@ -19,12 +19,12 @@ struct MockMessage: Sendable {
 }
 
 extension MockMessage {
-    func toChatMessage(messageRole: MessageRole) -> ExyteChat.Message {
-        ExyteChat.Message(
+    func toChatMessage(messageRole: MessageRole) -> ExyteChat.ChatMessage {
+        ExyteChat.ChatMessage(
             id: uid,
             messageRole: messageRole,
+            content: text,
             createdAt: createdAt,
-            text: text,
             attachments: images.map { $0.toChatAttachment() } + videos.map { $0.toChatAttachment() },
             reactions: reactions,
             recording: recording,

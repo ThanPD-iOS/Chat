@@ -8,7 +8,7 @@ import ExyteChat
 @MainActor
 final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
 
-    @Published var messages: [Message] = []
+    @Published var messages: [ChatMessage] = []
 
     @Published var chatTitle: String = ""
     @Published var chatStatus: String = ""
@@ -20,17 +20,16 @@ final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
     init(interactor: MockChatInteractor = MockChatInteractor()) {
         self.interactor = interactor
         messages = [
-            Message(id: UUID().uuidString, messageRole: .assistant, text: "thanduc"),
-            Message(id: UUID().uuidString, messageRole: .user, text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
-            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            ChatMessage(id: UUID().uuidString, messageRole: .assistant, content: "thanduc"),
+            ChatMessage(id: UUID().uuidString, messageRole: .user, content: "ducthan"),
+            ChatMessage(id: UUID().uuidString, messageRole: .assistant, content: "thanduc"),
+            ChatMessage(id: UUID().uuidString, messageRole: .user, content: "ducthan"),
+            ChatMessage(id: UUID().uuidString, messageRole: .assistant, content: "thanduc"),
+            ChatMessage(id: UUID().uuidString, messageRole: .user, content: "ducthan"),
+            ChatMessage(id: UUID().uuidString, messageRole: .assistant, content: "thanduc"),
+            ChatMessage(id: UUID().uuidString, messageRole: .user, content: "ducthan"),
+            ChatMessage(id: UUID().uuidString, messageRole: .assistant, content: "thanduc"),
+            ChatMessage(id: UUID().uuidString, messageRole: .user, content: "ducthan"),
         ]
     }
 
@@ -48,7 +47,7 @@ final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
         }
     }
 
-    nonisolated func didReact(to message: Message, reaction draftReaction: DraftReaction) {
+    nonisolated func didReact(to message: ChatMessage, reaction draftReaction: DraftReaction) {
         Task {
 //            await interactor.add(draftReaction: draftReaction, to: draftReaction.messageID)
         }
@@ -74,7 +73,7 @@ final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
         timer?.invalidate()
     }
 
-    func loadMoreMessage(before message: Message) {
+    func loadMoreMessage(before message: ChatMessage) {
         Task {
             await interactor.loadNextPage()
             updateMessages()

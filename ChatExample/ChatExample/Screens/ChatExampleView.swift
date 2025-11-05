@@ -30,7 +30,7 @@ struct ChatExampleView: View {
                 }, didSendMessage: { draft in
 //                    viewModel.send(draft: draft)
                 }, messageBuilder: { message, positionInGroup, positionInMessagesSection, positionInCommentsGroup, showContextMenuClosure, messageActionClosure, showAttachmentClosure in
-                    Text(message.text)
+                    Text(message.content)
                         .padding(.top, 16)
                 }
             )

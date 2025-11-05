@@ -87,6 +87,7 @@
 		845EB36F2EB8BA00005347E5 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		845EB4052EB8C84D005347E5 /* MySelfChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySelfChatView.swift; sourceTree = "<group>"; };
 		84D1350B2EBA169500DD898F /* MockAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAttachment.swift; sourceTree = "<group>"; };
+		84D1350D2EBB2CB400DD898F /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		FF220E5C2DD9F0AF00BE315E /* .editorconfig */ = {isa = PBXFileReference; lastKnownFileType = text; path = .editorconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,6 +109,7 @@
 				135549322864620900C9459A /* ChatExample */,
 				5B4DBAA32D92E2560067A006 /* Frameworks */,
 				135549312864620900C9459A /* Products */,
+				84D1350D2EBB2CB400DD898F /* File.swift */,
 			);
 			sourceTree = "<group>";
 		};

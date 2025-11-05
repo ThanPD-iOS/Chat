@@ -8,7 +8,7 @@ import SwiftUI
 extension MessageView {
     
     @ViewBuilder
-    func reactionsView(_ message: Message, maxReactions: Int = 5) -> some View {
+    func reactionsView(_ message: ChatMessage, maxReactions: Int = 5) -> some View {
 //        let preparedReactions = prepareReactions(message: message, maxReactions: maxReactions)
         let overflowBubbleText = "+\(message.reactions.count - maxReactions + 1)"
         

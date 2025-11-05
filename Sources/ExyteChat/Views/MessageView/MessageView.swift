@@ -13,7 +13,7 @@ struct MessageView: View {
 
     @ObservedObject var viewModel: ChatViewModel
 
-    let message: Message
+    let message: ChatMessage
     let positionInUserGroup: PositionInUserGroup
     let positionInMessagesSection: PositionInMessagesSection
     let chatType: ChatType
@@ -67,7 +67,7 @@ struct MessageView: View {
         let maxWidth =
         message.attachments.isEmpty
         ? widthWithoutMedia : MessageView.widthWithMedia - textPaddings
-        let styledText = message.text.styled(using: messageStyler)
+        let styledText = message.content.styled(using: messageStyler)
         
         let finalWidth = styledText.width(withConstrainedWidth: maxWidth, font: font)
         let lastLineWidth = styledText.lastLineWidth(labelWidth: maxWidth, font: font)
@@ -135,7 +135,7 @@ struct MessageView: View {
     }
 
     @ViewBuilder
-    func bubbleView(_ message: Message) -> some View {
+    func bubbleView(_ message: ChatMessage) -> some View {
         VStack(
             alignment: message.messageRole == .user ? .leading : .trailing,
             spacing: -bubbleSize.height / 3
@@ -155,7 +155,7 @@ struct MessageView: View {
                     attachmentsView(message)
                 }
 
-                if !message.text.isEmpty {
+                if !message.content.isEmpty {
                     textWithTimeView(message)
                         .font(Font(font))
                 }
@@ -169,7 +169,7 @@ struct MessageView: View {
     }
 
     @ViewBuilder
-    func replyBubbleView(_ message: Message) -> some View {
+    func replyBubbleView(_ message: ChatMessage) -> some View {
         VStack(alignment: .leading, spacing: 0) {
 //            Text(message.user.name)
 //                .fontWeight(.semibold)
@@ -178,12 +178,12 @@ struct MessageView: View {
             if !message.attachments.isEmpty {
                 attachmentsView(message)
                     .padding(.top, 4)
-                    .padding(.bottom, message.text.isEmpty ? 0 : 4)
+                    .padding(.bottom, message.content.isEmpty ? 0 : 4)
             }
 
-            if !message.text.isEmpty {
+            if !message.content.isEmpty {
                 MessageTextView(
-                    text: message.text, messageStyler: messageStyler,
+                    text: message.content, messageStyler: messageStyler,
                     messageRole: message.messageRole, shouldShowLinkPreview: shouldShowLinkPreview,
                     messageLinkPreviewLimit: messageLinkPreviewLimit
                 )
@@ -231,7 +231,7 @@ struct MessageView: View {
 //    }
 
     @ViewBuilder
-    func attachmentsView(_ message: Message) -> some View {
+    func attachmentsView(_ message: ChatMessage) -> some View {
         AttachmentsGrid(attachments: message.attachments) {
             viewModel.presentAttachmentFullScreen($0)
         }
@@ -250,9 +250,9 @@ struct MessageView: View {
     }
 
     @ViewBuilder
-    func textWithTimeView(_ message: Message) -> some View {
+    func textWithTimeView(_ message: ChatMessage) -> some View {
         let messageView = MessageTextView(
-            text: message.text, messageStyler: messageStyler,
+            text: message.content, messageStyler: messageStyler,
             messageRole: message.messageRole, shouldShowLinkPreview: shouldShowLinkPreview,
             messageLinkPreviewLimit: messageLinkPreviewLimit
         )
@@ -299,7 +299,7 @@ struct MessageView: View {
 extension View {
 
     @ViewBuilder
-    func bubbleBackground(_ message: Message, theme: ChatTheme, isReply: Bool = false) -> some View
+    func bubbleBackground(_ message: ChatMessage, theme: ChatTheme, isReply: Bool = false) -> some View
     {
         let radius: CGFloat = !message.attachments.isEmpty ? 12 : 20
         let additionalMediaInset: CGFloat = message.attachments.count > 1 ? 2 : 0
@@ -310,7 +310,7 @@ extension View {
             )
             .foregroundColor(theme.colors.messageText(message.messageRole))
             .background {
-                if isReply || !message.text.isEmpty || message.recording != nil {
+                if isReply || !message.content.isEmpty || message.recording != nil {
                     RoundedRectangle(cornerRadius: radius)
                         .foregroundColor(theme.colors.messageBG(message.messageRole))
                         .opacity(isReply ? theme.style.replyOpacity : 1)
