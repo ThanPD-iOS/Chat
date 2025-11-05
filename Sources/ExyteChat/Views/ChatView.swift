@@ -70,7 +70,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     ) -> Void
     
     /// User and MessageId
-    public typealias TapAvatarClosure = (User, String) -> ()
+//    public typealias TapAvatarClosure = (User, String) -> ()
     
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.chatTheme) private var theme
@@ -118,7 +118,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     var showMessageMenuOnLongPress: Bool = true
     var messageMenuAnimationDuration: Double = 0.3
     var showNetworkConnectionProblem: Bool = false
-    var tapAvatarClosure: TapAvatarClosure?
+//    var tapAvatarClosure: TapAvatarClosure?
     var mediaPickerSelectionParameters: MediaPickerSelectionParameters?
     var mediaPickerParameters: MediaPickerParameters?
     var orientationHandler: MediaPickerOrientationHandler = {_ in}
@@ -344,7 +344,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
             isScrollEnabled: isScrollEnabled,
             avatarSize: avatarSize,
             showMessageMenuOnLongPress: showMessageMenuOnLongPress,
-            tapAvatarClosure: tapAvatarClosure,
+//            tapAvatarClosure: tapAvatarClosure,
             paginationHandler: paginationHandler,
             messageStyler: messageStyler,
             shouldShowLinkPreview: shouldShowLinkPreview,
@@ -439,7 +439,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
         ) {
             ChatMessageView(
                 viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type,
-                avatarSize: avatarSize, tapAvatarClosure: nil, messageStyler: messageStyler,
+                avatarSize: avatarSize, /*tapAvatarClosure: nil,*/ messageStyler: messageStyler,
                 shouldShowLinkPreview: shouldShowLinkPreview,
                 isDisplayingMessageMenu: true, showMessageTimeView: showMessageTimeView,
                 messageLinkPreviewLimit: messageLinkPreviewLimit, messageFont: messageFont
@@ -454,7 +454,7 @@ public struct ChatView<MessageContent: View, InputViewContent: View, MenuAction:
     private func menuAlignment(_ message: Message, chatType: ChatType) -> MessageMenuAlignment {
         switch chatType {
         case .conversation:
-            return message.user.isCurrentUser ? .right : .left
+            return message.messageRole == .user ? .right : .left
         case .comments:
             return .left
         }
@@ -665,11 +665,11 @@ public extension ChatView {
         return view
     }
     
-    func tapAvatarClosure(_ closure: @escaping TapAvatarClosure) -> ChatView {
-        var view = self
-        view.tapAvatarClosure = closure
-        return view
-    }
+//    func tapAvatarClosure(_ closure: @escaping TapAvatarClosure) -> ChatView {
+//        var view = self
+//        view.tapAvatarClosure = closure
+//        return view
+//    }
     
     func messageUseMarkdown(_ messageUseMarkdown: Bool) -> ChatView {
         return messageUseStyler(String.markdownStyler)

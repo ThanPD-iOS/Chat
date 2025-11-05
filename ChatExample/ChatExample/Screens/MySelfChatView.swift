@@ -15,6 +15,8 @@ struct MySelfChatView: View {
     var deleteAction: (() -> Void)?
     var retryAction: (() -> Void)?
     
+    @State private var text: String = "Hello"
+    
     var body: some View {
         VStack(spacing: 0) {
             contentView
@@ -33,7 +35,7 @@ struct MySelfChatView: View {
             Spacer()
                 .frame(width: 40)
             
-            Text("hello what the hell")
+            Text(text)
                 .contextMenu {
                     Button {
     //                    viewWithMenuViewModel.copiedToClipboard(text: message.content)

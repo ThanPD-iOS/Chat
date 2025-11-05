@@ -9,60 +9,60 @@ extension MessageView {
     
     @ViewBuilder
     func reactionsView(_ message: Message, maxReactions: Int = 5) -> some View {
-        let preparedReactions = prepareReactions(message: message, maxReactions: maxReactions)
+//        let preparedReactions = prepareReactions(message: message, maxReactions: maxReactions)
         let overflowBubbleText = "+\(message.reactions.count - maxReactions + 1)"
         
         HStack(spacing: -bubbleSize.width / 5) {
-            if !message.user.isCurrentUser {
-                overflowBubbleView(
-                    leadingSpacer: true,
-                    needsOverflowBubble: preparedReactions.needsOverflowBubble,
-                    text: overflowBubbleText,
-                    containsReactionFromCurrentUser: preparedReactions.overflowContainsCurrentUser
-                )
-            }
+//            if message.messageRole != .user {
+//                overflowBubbleView(
+//                    leadingSpacer: true,
+//                    needsOverflowBubble: preparedReactions.needsOverflowBubble,
+//                    text: overflowBubbleText,
+//                    containsReactionFromCurrentUser: preparedReactions.overflowContainsCurrentUser
+//                )
+//            }
             
-            ForEach(Array(preparedReactions.reactions.enumerated()), id: \.element) { index, reaction in
-                ReactionBubble(reaction: reaction, font: Font(font))
-                    .transition(.scaleAndFade)
-                    .zIndex(message.user.isCurrentUser ? Double(preparedReactions.reactions.count - index) : Double(index + 1))
-                    .sizeGetter($bubbleSize)
-            }
+//            ForEach(Array(preparedReactions.reactions.enumerated()), id: \.element) { index, reaction in
+//                ReactionBubble(reaction: reaction, font: Font(font))
+//                    .transition(.scaleAndFade)
+//                    .zIndex(message.messageRole == .user ? Double(preparedReactions.reactions.count - index) : Double(index + 1))
+//                    .sizeGetter($bubbleSize)
+//            }
             
-            if message.user.isCurrentUser {
-                overflowBubbleView(
-                    leadingSpacer: false,
-                    needsOverflowBubble: preparedReactions.needsOverflowBubble,
-                    text: overflowBubbleText,
-                    containsReactionFromCurrentUser: preparedReactions.overflowContainsCurrentUser
-                )
-            }
+//            if message.messageRole == .user {
+//                overflowBubbleView(
+//                    leadingSpacer: false,
+//                    needsOverflowBubble: preparedReactions.needsOverflowBubble,
+//                    text: overflowBubbleText,
+//                    containsReactionFromCurrentUser: preparedReactions.overflowContainsCurrentUser
+//                )
+//            }
         }
         .offset(
-            x: message.user.isCurrentUser ? -(bubbleSize.height / 2) : (bubbleSize.height / 2),
+            x: message.messageRole == .user ? -(bubbleSize.height / 2) : (bubbleSize.height / 2),
             y: 0
         )
     }
     
-    @ViewBuilder
-    func overflowBubbleView(leadingSpacer:Bool, needsOverflowBubble:Bool, text:String, containsReactionFromCurrentUser:Bool) -> some View {
-        if needsOverflowBubble {
-            ReactionBubble(
-                reaction: .init(
-                    user: .init(
-                        id: "null",
-                        name: "",
-                        avatarURL: nil,
-                        isCurrentUser: containsReactionFromCurrentUser
-                    ),
-                    type: .emoji(text),
-                    status: .sent
-                ),
-                font: .footnote.weight(.light)
-            )
-            .padding(message.user.isCurrentUser ? .trailing : .leading, -3)
-        }
-    }
+//    @ViewBuilder
+//    func overflowBubbleView(leadingSpacer:Bool, needsOverflowBubble:Bool, text:String, containsReactionFromCurrentUser:Bool) -> some View {
+//        if needsOverflowBubble {
+//            ReactionBubble(
+//                reaction: .init(
+//                    user: .init(
+//                        id: "null",
+//                        name: "",
+//                        avatarURL: nil,
+//                        isCurrentUser: containsReactionFromCurrentUser
+//                    ),
+//                    type: .emoji(text),
+//                    status: .sent
+//                ),
+//                font: .footnote.weight(.light)
+//            )
+//            .padding(message.user.isCurrentUser ? .trailing : .leading, -3)
+//        }
+//    }
     
     struct PreparedReactions {
         /// Sorted Reactions by most recent -> oldest (trimmed to maxReactions)
@@ -75,28 +75,28 @@ extension MessageView {
     }
     
     /// Orders the reactions by most recent to oldest, reverses their layout based on alignment and determines if an overflow bubble is necessary
-    private func prepareReactions(message:Message, maxReactions:Int) -> PreparedReactions {
-        guard maxReactions > 1, !message.reactions.isEmpty else {
-            return .init(reactions: [], needsOverflowBubble: false, overflowContainsCurrentUser: false)
-        }
-        // If we have more reactions than maxReactions, then we'll need an overflow bubble
-        let needsOverflowBubble = message.reactions.count > maxReactions
-        // Sort all reactions by most recent -> oldest
-        var reactions = Array(message.reactions.sorted(by: { $0.createdAt > $1.createdAt }))
-        // Check if our current user has a reaction in the overflow reactions (used for coloring the overflow bubble)
-        var overflowContainsCurrentUser: Bool = false
-        if needsOverflowBubble {
-           overflowContainsCurrentUser = reactions[min(reactions.count, maxReactions)...].contains(where: {  $0.user.isCurrentUser })
-        }
-        // Trim the reactions array if necessary
-        if needsOverflowBubble { reactions = Array(reactions.prefix(maxReactions - 1)) }
-        
-        return .init(
-            reactions: message.user.isCurrentUser ? reactions : reactions.reversed(),
-            needsOverflowBubble: needsOverflowBubble,
-            overflowContainsCurrentUser: overflowContainsCurrentUser
-        )
-    }
+//    private func prepareReactions(message:Message, maxReactions:Int) -> PreparedReactions {
+//        guard maxReactions > 1, !message.reactions.isEmpty else {
+//            return .init(reactions: [], needsOverflowBubble: false, overflowContainsCurrentUser: false)
+//        }
+//        // If we have more reactions than maxReactions, then we'll need an overflow bubble
+//        let needsOverflowBubble = message.reactions.count > maxReactions
+//        // Sort all reactions by most recent -> oldest
+//        var reactions = Array(message.reactions.sorted(by: { $0.createdAt > $1.createdAt }))
+//        // Check if our current user has a reaction in the overflow reactions (used for coloring the overflow bubble)
+//        var overflowContainsCurrentUser: Bool = false
+//        if needsOverflowBubble {
+//           overflowContainsCurrentUser = reactions[min(reactions.count, maxReactions)...].contains(where: {  $0.user.isCurrentUser })
+//        }
+//        // Trim the reactions array if necessary
+//        if needsOverflowBubble { reactions = Array(reactions.prefix(maxReactions - 1)) }
+//        
+//        return .init(
+//            reactions: message.user.isCurrentUser ? reactions : reactions.reversed(),
+//            needsOverflowBubble: needsOverflowBubble,
+//            overflowContainsCurrentUser: overflowContainsCurrentUser
+//        )
+//    }
 }
 
 struct ReactionBubble: View {
@@ -111,7 +111,7 @@ struct ReactionBubble: View {
     var fillColor: Color {
         switch reaction.status {
         case .sending, .sent, .read:
-            return reaction.user.isCurrentUser ? theme.colors.messageMyBG : theme.colors.messageFriendBG
+            return reaction.messageRole == .user ? theme.colors.messageMyBG : theme.colors.messageFriendBG
         case .error:
             return .red
         }
@@ -130,7 +130,7 @@ struct ReactionBubble: View {
         Text(reaction.emoji ?? "?")
             .font(font)
             .opacity(opacity)
-            .foregroundStyle(theme.colors.messageText(reaction.user.type))
+            .foregroundStyle(theme.colors.messageText(reaction.messageRole))
             .padding(6)
             .background(
                 ZStack {

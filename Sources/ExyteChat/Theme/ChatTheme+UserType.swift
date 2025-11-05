@@ -8,27 +8,24 @@
 import SwiftUI
 
 extension ChatTheme.Colors {
-    func messageBG(_ type: UserType) -> Color {
+    func messageBG(_ type: MessageRole) -> Color {
         switch type {
-        case .current: messageMyBG
-        case .other: messageFriendBG
-        case .system: messageSystemBG
+        case .user: messageMyBG
+        case .assistant: messageSystemBG
         }
     }
     
-    func messageText(_ type: UserType) -> Color {
+    func messageText(_ type: MessageRole) -> Color {
         switch type {
-        case .current: messageMyText
-        case .other: messageFriendText
-        case .system: messageSystemText
+        case .user: messageMyText
+        case .assistant: messageSystemText
         }
     }
     
-    func messageTimeText(_ type: UserType) -> Color {
+    func messageTimeText(_ type: MessageRole) -> Color {
         switch type {
-        case .current: messageMyTimeText
-        case .other: messageFriendTimeText
-        case .system: messageSystemTimeText
+        case .user: messageMyTimeText
+        case .assistant: messageSystemTimeText
         }
     }
 }

@@ -7,7 +7,7 @@ import SwiftUI
 struct MessageTimeView: View {
 
     let text: String
-    let userType: UserType
+    let userType: MessageRole
     var chatTheme: ChatTheme
 
     var body: some View {

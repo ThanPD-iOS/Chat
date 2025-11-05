@@ -259,58 +259,6 @@ struct InputView: View {
     }
     
     @ViewBuilder
-    var viewOnTop: some View {
-        if let message = viewModel.attachments.replyMessage {
-            VStack(spacing: 8) {
-                Rectangle()
-                    .foregroundColor(theme.colors.messageFriendBG)
-                    .frame(height: 2)
-                
-                HStack {
-                    theme.images.reply.replyToMessage
-                    Capsule()
-                        .foregroundColor(theme.colors.messageMyBG)
-                        .frame(width: 2)
-                    VStack(alignment: .leading) {
-                        Text(localization.replyToText + " " + message.user.name)
-                            .font(.caption2)
-                            .foregroundColor(theme.colors.mainCaptionText)
-                        if !message.text.isEmpty {
-                            textView(message.text)
-                                .font(.caption2)
-                                .lineLimit(1)
-                                .foregroundColor(theme.colors.mainText)
-                        }
-                    }
-                    .padding(.vertical, 2)
-                    
-                    Spacer()
-                    
-                    if let first = message.attachments.first {
-                        AsyncImageView(attachment: first, size: CGSize(width: 30, height: 30))
-                            .viewSize(30)
-                            .cornerRadius(4)
-                            .padding(.trailing, 16)
-                    }
-                    
-                    if let _ = message.recording {
-                        theme.images.inputView.microphone
-                            .renderingMode(.template)
-                            .foregroundColor(theme.colors.mainTint)
-                    }
-                    
-                    theme.images.reply.cancelReply
-                        .onTapGesture {
-                            viewModel.attachments.replyMessage = nil
-                        }
-                }
-                .padding(.horizontal, 26)
-            }
-            .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-    
-    @ViewBuilder
     func textView(_ text: String) -> some View {
         Text(text.styled(using: messageStyler))
     }

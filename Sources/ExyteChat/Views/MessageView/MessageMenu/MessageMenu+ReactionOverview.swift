@@ -15,20 +15,20 @@ struct ReactionOverview: View {
     let padding: CGFloat = 16
     let inScrollView: Bool
 
-    struct SortedReaction: Identifiable {
-        var id: String { reaction.toString }
-        let reaction: ReactionType
-        let users: [User]
-    }
+//    struct SortedReaction: Identifiable {
+//        var id: String { reaction.toString }
+//        let reaction: ReactionType
+//        let users: [User]
+//    }
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack(spacing: padding) {
                 Spacer()
-                ForEach(sortReactions()) { reaction in
-                    reactionUserView(reaction: reaction)
-                        .padding(padding / 2)
-                }
+//                ForEach(sortReactions()) { reaction in
+//                    reactionUserView(reaction: reaction)
+//                        .padding(padding / 2)
+//                }
                 Spacer()
             }
             .frame(minWidth: width - (padding * 2))
@@ -46,26 +46,26 @@ struct ReactionOverview: View {
         .offset(x: horizontalOffset)
     }
 
-    @ViewBuilder
-    func reactionUserView(reaction: SortedReaction) -> some View {
-        VStack {
-            Text(reaction.reaction.toString)
-                .font(.title3)
-                .background(
-                    emojiBackgroundView()
-                        .opacity(0.1)
-                        .padding(-10)
-                )
-                .padding(.top, 8)
-                .padding(.bottom)
-
-            HStack(spacing: -14) {
-                ForEach(reaction.users) { user in
-                    avatarView(user)
-                }
-            }
-        }
-    }
+//    @ViewBuilder
+//    func reactionUserView(reaction: SortedReaction) -> some View {
+//        VStack {
+//            Text(reaction.reaction.toString)
+//                .font(.title3)
+//                .background(
+//                    emojiBackgroundView()
+//                        .opacity(0.1)
+//                        .padding(-10)
+//                )
+//                .padding(.top, 8)
+//                .padding(.bottom)
+//
+//            HStack(spacing: -14) {
+//                ForEach(reaction.users) { user in
+//                    avatarView(user)
+//                }
+//            }
+//        }
+//    }
 
     @ViewBuilder
     func emojiBackgroundView() -> some View {
@@ -82,49 +82,50 @@ struct ReactionOverview: View {
         .compositingGroup()
     }
     
-    @ViewBuilder
-     func avatarView(_ user: User) -> some View {
-         if let url = user.avatarURL {
-             AvatarImageView(url: user.avatarURL, avatarSize: 32, avatarCacheKey: user.avatarCacheKey)
-                 .contentShape(Circle())
-                 .overlay(
-                     Circle()
-                         .stroke(style: .init(lineWidth: 1))
-                         .foregroundStyle(backgroundColor)
-                 )
-         } else {
-             AvatarNameView(name: user.name, avatarSize: 32)
-                 .contentShape(Circle())
-                 .overlay(
-                     Circle()
-                         .stroke(style: .init(lineWidth: 1))
-                         .foregroundStyle(backgroundColor)
-                 )
-         }
-     }
+//    @ViewBuilder
+//     func avatarView(_ user: User) -> some View {
+//         if let url = user.avatarURL {
+//             AvatarImageView(url: user.avatarURL, avatarSize: 32, avatarCacheKey: user.avatarCacheKey)
+//                 .contentShape(Circle())
+//                 .overlay(
+//                     Circle()
+//                         .stroke(style: .init(lineWidth: 1))
+//                         .foregroundStyle(backgroundColor)
+//                 )
+//         } else {
+//             AvatarNameView(name: user.name, avatarSize: 32)
+//                 .contentShape(Circle())
+//                 .overlay(
+//                     Circle()
+//                         .stroke(style: .init(lineWidth: 1))
+//                         .foregroundStyle(backgroundColor)
+//                 )
+//         }
+//     }
 
     private var horizontalOffset: CGFloat {
         guard inScrollView else { return 0 }
-        if message.user.isCurrentUser {
+        switch message.messageRole {
+        case .user:
             return UIApplication.safeArea.leading
-        } else {
+        case .assistant:
             return -UIApplication.safeArea.leading
         }
     }
 
-    private func sortReactions() -> [SortedReaction] {
-        let mostRecent = message.reactions.sorted { $0.createdAt < $1.createdAt }
-        let orderedEmojis = mostRecent.map(\.emoji)
-        return Set(message.reactions.compactMap(\.emoji)).sorted(by: {
-            orderedEmojis.firstIndex(of: $0)! < orderedEmojis.firstIndex(of: $1)!
-        }).map { emoji in
-            let users = mostRecent.filter { $0.emoji == emoji }
-            return SortedReaction(
-                reaction: .emoji(emoji),
-                users: users.map(\.user)
-            )
-        }
-    }
+//    private func sortReactions() -> [SortedReaction] {
+//        let mostRecent = message.reactions.sorted { $0.createdAt < $1.createdAt }
+//        let orderedEmojis = mostRecent.map(\.emoji)
+//        return Set(message.reactions.compactMap(\.emoji)).sorted(by: {
+//            orderedEmojis.firstIndex(of: $0)! < orderedEmojis.firstIndex(of: $1)!
+//        }).map { emoji in
+//            let users = mostRecent.filter { $0.emoji == emoji }
+//            return SortedReaction(
+//                reaction: .emoji(emoji),
+//                users: users.map(\.user)
+//            )
+//        }
+//    }
 }
 
 #if swift(>=6.0)

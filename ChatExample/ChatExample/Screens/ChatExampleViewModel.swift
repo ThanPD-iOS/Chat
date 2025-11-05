@@ -19,13 +19,19 @@ final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
 
     init(interactor: MockChatInteractor = MockChatInteractor()) {
         self.interactor = interactor
-
-        Task {
-            let senders = await interactor.otherSenders
-            self.chatTitle = senders.count == 1 ? senders.first!.name : "Group chat"
-            self.chatStatus = senders.count == 1 ? "online" : "\(senders.count + 1) members"
-            self.chatCover = senders.count == 1 ? senders.first!.avatar : nil
-        }
+        messages = [
+            Message(id: UUID().uuidString, messageRole: .assistant, text: "thanduc"),
+            Message(id: UUID().uuidString, messageRole: .user, text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+            Message(id: UUID().uuidString, messageRole: .assistant,text: "ducthan"),
+        ]
     }
 
     func send(draft: DraftMessage) {
@@ -44,7 +50,7 @@ final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
 
     nonisolated func didReact(to message: Message, reaction draftReaction: DraftReaction) {
         Task {
-            await interactor.add(draftReaction: draftReaction, to: draftReaction.messageID)
+//            await interactor.add(draftReaction: draftReaction, to: draftReaction.messageID)
         }
     }
 
@@ -76,8 +82,10 @@ final class ChatExampleViewModel: ObservableObject, ReactionDelegate {
     }
 
     func updateMessages() {
+        let number = Int.random(in: 0..<100)
+        print("phungducthan \(number)")
         Task {
-            self.messages = await interactor.messages.compactMap { $0.toChatMessage() }
+//            self.messages = await interactor.messages
         }
     }
 }

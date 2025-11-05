@@ -28,9 +28,10 @@ struct ChatExampleView: View {
                 }, tapToButtonSend: { _ in
                     
                 }, didSendMessage: { draft in
-                    viewModel.send(draft: draft)
+//                    viewModel.send(draft: draft)
                 }, messageBuilder: { message, positionInGroup, positionInMessagesSection, positionInCommentsGroup, showContextMenuClosure, messageActionClosure, showAttachmentClosure in
-                    MySelfChatView()
+                    Text(message.text)
+                        .padding(.top, 16)
                 }
             )
             .enableLoadMore(pageSize: 3) { message in
@@ -40,6 +41,7 @@ struct ChatExampleView: View {
             }
             .keyboardDismissMode(.interactive)
             .messageUseMarkdown(true)
+            .showDateHeaders(false)
         }
         .navigationBarBackButtonHidden()
         .onAppear(perform: viewModel.onStart)

@@ -20,13 +20,13 @@ struct MessageTextView: View {
 
     let text: String
     let messageStyler: (String) -> AttributedString
-    let userType: UserType
+    let messageRole: MessageRole
     let shouldShowLinkPreview: (URL) -> Bool
     let messageLinkPreviewLimit: Int
 
     var styledText: AttributedString {
         var result = text.styled(using: messageStyler)
-        result.foregroundColor = theme.colors.messageText(userType)
+        result.foregroundColor = theme.colors.messageText(messageRole)
 
         for (link, range) in result.runs[\.link] {
             if link != nil {
@@ -58,22 +58,5 @@ struct MessageTextView: View {
                 }
             }
         }
-    }
-}
-
-struct MessageTextView_Previews: PreviewProvider {
-    static var previews: some View {
-        MessageTextView(
-            text: "Look at [this website](https://example.org)",
-            messageStyler: AttributedString.init, userType: .other,
-            shouldShowLinkPreview: { _ in true }, messageLinkPreviewLimit: 8)
-        MessageTextView(
-            text: "Look at [this website](https://example.org)",
-            messageStyler: String.markdownStyler, userType: .other,
-            shouldShowLinkPreview: { _ in true }, messageLinkPreviewLimit: 8)
-        MessageTextView(
-            text: "[@Dan](mention://user/123456789) look at [this website](https://example.org)!",
-            messageStyler: String.markdownStyler, userType: .other,
-            shouldShowLinkPreview: { $0.scheme != "mention" }, messageLinkPreviewLimit: 8)
     }
 }

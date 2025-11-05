@@ -34,7 +34,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
     let isScrollEnabled: Bool
     let avatarSize: CGFloat
     let showMessageMenuOnLongPress: Bool
-    let tapAvatarClosure: ChatView.TapAvatarClosure?
+//    let tapAvatarClosure: ChatView.TapAvatarClosure?
     let paginationHandler: PaginationHandler?
     let messageStyler: (String) -> AttributedString
     let shouldShowLinkPreview: (URL) -> Bool
@@ -368,7 +368,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
             messageBuilder: messageBuilder, mainHeaderBuilder: mainHeaderBuilder,
             headerBuilder: headerBuilder, type: type, showDateHeaders: showDateHeaders,
             avatarSize: avatarSize, showMessageMenuOnLongPress: showMessageMenuOnLongPress,
-            tapAvatarClosure: tapAvatarClosure, paginationHandler: paginationHandler,
+            /*tapAvatarClosure: tapAvatarClosure, */paginationHandler: paginationHandler,
             messageStyler: messageStyler, shouldShowLinkPreview: shouldShowLinkPreview,
             showMessageTimeView: showMessageTimeView,
             messageLinkPreviewLimit: messageLinkPreviewLimit, messageFont: messageFont,
@@ -393,7 +393,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
         let showDateHeaders: Bool
         let avatarSize: CGFloat
         let showMessageMenuOnLongPress: Bool
-        let tapAvatarClosure: ChatView.TapAvatarClosure?
+//        let tapAvatarClosure: ChatView.TapAvatarClosure?
         let paginationHandler: PaginationHandler?
         let messageStyler: (String) -> AttributedString
         let shouldShowLinkPreview: (URL) -> Bool
@@ -420,7 +420,8 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
             messageBuilder: MessageBuilderClosure?, mainHeaderBuilder: (() -> AnyView)?,
             headerBuilder: ((Date) -> AnyView)?, type: ChatType, showDateHeaders: Bool,
             avatarSize: CGFloat, showMessageMenuOnLongPress: Bool,
-            tapAvatarClosure: ChatView.TapAvatarClosure?, paginationHandler: PaginationHandler?,
+//            tapAvatarClosure: ChatView.TapAvatarClosure?,
+            paginationHandler: PaginationHandler?,
             messageStyler: @escaping (String) -> AttributedString,
             shouldShowLinkPreview: @escaping (URL) -> Bool, showMessageTimeView: Bool,
             messageLinkPreviewLimit: Int, messageFont: UIFont, sections: [MessagesSection],
@@ -438,7 +439,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
             self.showDateHeaders = showDateHeaders
             self.avatarSize = avatarSize
             self.showMessageMenuOnLongPress = showMessageMenuOnLongPress
-            self.tapAvatarClosure = tapAvatarClosure
+//            self.tapAvatarClosure = tapAvatarClosure
             self.paginationHandler = paginationHandler
             self.messageStyler = messageStyler
             self.shouldShowLinkPreview = shouldShowLinkPreview
@@ -574,7 +575,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
             tableViewCell.contentConfiguration = UIHostingConfiguration {
                 ChatMessageView(
                     viewModel: viewModel, messageBuilder: messageBuilder, row: row, chatType: type,
-                    avatarSize: avatarSize, tapAvatarClosure: tapAvatarClosure,
+                    avatarSize: avatarSize/*, tapAvatarClosure: tapAvatarClosure*/,
                     messageStyler: messageStyler, shouldShowLinkPreview: shouldShowLinkPreview,
                     isDisplayingMessageMenu: false, showMessageTimeView: showMessageTimeView,
                     messageLinkPreviewLimit: messageLinkPreviewLimit, messageFont: messageFont
@@ -619,7 +620,7 @@ struct UIList<MessageContent: View, InputView: View>: UIViewRepresentable {
 
     func formatRow(_ row: MessageRow) -> String {
         String(
-            "id: \(row.id) text: \(row.message.text) status: \(row.message.status ?? .none) date: \(row.message.createdAt) position in user group: \(row.positionInUserGroup) position in messages section: \(row.positionInMessagesSection) trigger: \(row.message.triggerRedraw)"
+            "id: \(row.id) text: \(row.message.text) date: \(row.message.createdAt) position in user group: \(row.positionInUserGroup) position in messages section: \(row.positionInMessagesSection)"
         )
     }
 

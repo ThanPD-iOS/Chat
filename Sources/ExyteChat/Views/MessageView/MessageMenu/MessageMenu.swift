@@ -460,7 +460,7 @@ struct MessageMenu<MainButton: View, ActionEnum: MessageMenuAction>: View {
                     selectedColor: theme.colors.messageMyBG,
                     animation: .bouncy(duration: animationDuration),
                     animationDuration: animationDuration,
-                    currentReactions: message.reactions.filter({ $0.user.isCurrentUser }),
+                    currentReactions: message.reactions.filter({ $0.messageRole == .user }),
                     customReactions: reactions,
                     allowEmojiSearch: shouldAllowEmojiSearch,
                     alignment: alignment,

@@ -18,13 +18,7 @@ struct MockUser: Equatable {
 }
 
 extension MockUser {
-    var isCurrentUser: Bool {
-        uid == "1"
-    }
-}
-
-extension MockUser {
-    func toChatUser() -> ExyteChat.User {
-        ExyteChat.User(id: uid, name: name, avatarURL: avatar, isCurrentUser: isCurrentUser)
+    func toChatUser(messageRole: MessageRole) -> ExyteChat.MessageRole {
+        return messageRole
     }
 }

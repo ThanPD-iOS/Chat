@@ -39,7 +39,6 @@ final class MockChatData {
             uid: UUID().uuidString,
             sender: sender,
             createdAt: date,
-            status: sender.isCurrentUser ? .read : nil,
             text: shouldGenerateText ? Lorem.sentence(nbWords: Int.random(in: 3...10), useMarkdown: true) : "",
             images: images,
             videos: [],
@@ -71,30 +70,29 @@ final class MockChatData {
         )
     }
     
-    func randomReaction(senders: [MockUser]) -> Reaction {
-        let sampleEmojis: [String] = ["👍", "👎", "❤️", "🤣", "‼️", "❓", "🥳", "💪", "🔥", "💔", "😭"]
-        return Reaction(
-            user: senders.random()!.toChatUser(),
-            createdAt: Date.now,
-            type: .emoji(sampleEmojis.random()!),
-            status: .sent
-        )
-    }
-    
-    func reactToMessage(_ msg: MockMessage, senders: [MockUser]) -> MockMessage {
-        return MockMessage(
-            uid: msg.uid,
-            sender: msg.sender,
-            createdAt: msg.createdAt,
-            status: msg.status,
-            text: msg.text,
-            images: msg.images,
-            videos: msg.videos,
-            reactions: msg.reactions + [randomReaction(senders: senders)],
-            recording: msg.recording,
-            replyMessage: msg.replyMessage
-        )
-    }
+//    func randomReaction(senders: [MockUser]) -> Reaction {
+//        let sampleEmojis: [String] = ["👍", "👎", "❤️", "🤣", "‼️", "❓", "🥳", "💪", "🔥", "💔", "😭"]
+//        return Reaction(
+//            user: senders.random()!.toChatUser(),
+//            createdAt: Date.now,
+//            type: .emoji(sampleEmojis.random()!),
+//            status: .sent
+//        )
+//    }
+//    
+//    func reactToMessage(_ msg: MockMessage, senders: [MockUser]) -> MockMessage {
+//        return MockMessage(
+//            uid: msg.uid,
+//            sender: msg.sender,
+//            createdAt: msg.createdAt,
+//            text: msg.text,
+//            images: msg.images,
+//            videos: msg.videos,
+//            reactions: msg.reactions + [randomReaction(senders: senders)],
+//            recording: msg.recording,
+//            replyMessage: msg.replyMessage
+//        )
+//    }
 }
 
 class AssetExtractor {

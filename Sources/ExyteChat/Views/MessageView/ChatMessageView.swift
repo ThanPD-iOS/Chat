@@ -18,7 +18,7 @@ struct ChatMessageView<MessageContent: View>: View {
     let row: MessageRow
     let chatType: ChatType
     let avatarSize: CGFloat
-    let tapAvatarClosure: ChatView.TapAvatarClosure?
+//    let tapAvatarClosure: ChatView.TapAvatarClosure?
     let messageStyler: (String) -> AttributedString
     let shouldShowLinkPreview: (URL) -> Bool
     let isDisplayingMessageMenu: Bool
@@ -28,17 +28,17 @@ struct ChatMessageView<MessageContent: View>: View {
 
     var body: some View {
         Group {
-            if let messageBuilder = messageBuilder {
-                messageBuilder(
-                    row.message,
-                    row.positionInUserGroup,
-                    row.positionInMessagesSection,
-                    row.commentsPosition,
-                    { viewModel.messageMenuRow = row },
-                    viewModel.messageMenuAction()) { attachment in
-                        self.viewModel.presentAttachmentFullScreen(attachment)
-                    }
-            } else {
+//            if let messageBuilder = messageBuilder {
+//                messageBuilder(
+//                    row.message,
+//                    row.positionInUserGroup,
+//                    row.positionInMessagesSection,
+//                    row.commentsPosition,
+//                    { viewModel.messageMenuRow = row },
+//                    viewModel.messageMenuAction()) { attachment in
+//                        self.viewModel.presentAttachmentFullScreen(attachment)
+//                    }
+//            } else {
                 MessageView(
                     viewModel: viewModel,
                     message: row.message,
@@ -46,14 +46,13 @@ struct ChatMessageView<MessageContent: View>: View {
                     positionInMessagesSection: row.positionInMessagesSection,
                     chatType: chatType,
                     avatarSize: avatarSize,
-                    tapAvatarClosure: tapAvatarClosure,
+//                    tapAvatarClosure: tapAvatarClosure,
                     messageStyler: messageStyler,
                     shouldShowLinkPreview: shouldShowLinkPreview,
                     isDisplayingMessageMenu: isDisplayingMessageMenu,
-                    showMessageTimeView: showMessageTimeView,
                     messageLinkPreviewLimit: messageLinkPreviewLimit,
                     font: messageFont)
-            }
+//            }
         }
         .id(row.message.id)
     }

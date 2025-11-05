@@ -7,46 +7,39 @@
 
 import SwiftUI
 
-public struct Message: Identifiable, Hashable, Sendable {
+public enum MessageRole: Int, Codable, Sendable {
+    case user
+    case assistant
+}
 
-    public enum Status: Equatable, Hashable, Sendable {
-        case sending
-        case sent
-        case read
-        case error(DraftMessage)
-
-        public func hash(into hasher: inout Hasher) {
-            switch self {
-            case .sending:
-                return hasher.combine("sending")
-            case .sent:
-                return hasher.combine("sent")
-            case .read:
-                return hasher.combine("read")
-            case .error:
-                return hasher.combine("error")
-            }
-        }
-
-        public static func == (lhs: Message.Status, rhs: Message.Status) -> Bool {
-            switch (lhs, rhs) {
-            case (.sending, .sending):
-                return true
-            case (.sent, .sent):
-                return true
-            case (.read, .read):
-                return true
-            case ( .error(_), .error(_)):
-                return true
-            default:
-                return false
-            }
-        }
+class ChatMessage: Identifiable, Equatable, ObservableObject {
+    static func == (lhs: ChatMessage, rhs: ChatMessage) -> Bool {
+        return lhs.id == rhs.id
     }
+    
+    var id: String = UUID().uuidString
+    var conversationId: UUID
+    let messageRole: MessageRole
+    
+    var content: String
+    var isLoading: Bool = false
+    var isFailedToSend: Bool = false
+    var isGenerating: Bool = false
+    
+    init(id: String = UUID().uuidString, content: String, messageRole: MessageRole,
+         isLoading: Bool = false, conversationId: UUID, isGenerating: Bool = false) {
+        self.id = id
+        self.content = content
+        self.messageRole = messageRole
+        self.isLoading = isLoading
+        self.conversationId = conversationId
+        self.isGenerating = isGenerating
+    }
+}
 
+public struct Message: Identifiable, Hashable, Sendable {
     public var id: String
-    public var user: User
-    public var status: Status?
+    public let messageRole: MessageRole
     public var createdAt: Date
 
     public var text: String
@@ -56,11 +49,8 @@ public struct Message: Identifiable, Hashable, Sendable {
     public var recording: Recording?
     public var replyMessage: ReplyMessage?
 
-    public var triggerRedraw: UUID?
-
     public init(id: String,
-                user: User,
-                status: Status? = nil,
+                messageRole: MessageRole,
                 createdAt: Date = Date(),
                 text: String = "",
                 attachments: [Attachment] = [],
@@ -70,8 +60,7 @@ public struct Message: Identifiable, Hashable, Sendable {
                 replyMessage: ReplyMessage? = nil) {
 
         self.id = id
-        self.user = user
-        self.status = status
+        self.messageRole = messageRole
         self.createdAt = createdAt
         self.text = text
         self.attachments = attachments
@@ -80,55 +69,12 @@ public struct Message: Identifiable, Hashable, Sendable {
         self.recording = recording
         self.replyMessage = replyMessage
     }
-
-    public static func makeMessage(
-        id: String,
-        user: User,
-        status: Status? = nil,
-        draft: DraftMessage) async -> Message {
-            let attachments = await draft.medias.asyncCompactMap { media -> Attachment? in
-                guard let thumbnailURL = await media.getThumbnailURL() else {
-                    return nil
-                }
-                
-                switch media.type {
-                case .image:
-                    return Attachment(id: UUID().uuidString, url: thumbnailURL, type: .image)
-                case .video:
-                    guard let fullURL = await media.getURL() else {
-                        return nil
-                    }
-                    return Attachment(id: UUID().uuidString, thumbnail: thumbnailURL, full: fullURL, type: .video)
-                }
-            }
-            
-            let giphyMediaId = draft.giphyMedia?.id
-            
-            return Message(
-                id: id,
-                user: user,
-                status: status,
-                createdAt: draft.createdAt,
-                text: draft.text,
-                attachments: attachments,
-                giphyMediaId: giphyMediaId,
-                recording: draft.recording,
-                replyMessage: draft.replyMessage
-            )
-        }
-}
-
-extension Message {
-    var time: String {
-        DateFormatter.timeFormatter.string(from: createdAt)
-    }
 }
 
 extension Message: Equatable {
     public static func == (lhs: Message, rhs: Message) -> Bool {
         lhs.id == rhs.id &&
-        lhs.user == rhs.user &&
-        lhs.status == rhs.status &&
+        lhs.messageRole == rhs.messageRole &&
         lhs.createdAt == rhs.createdAt &&
         lhs.text == rhs.text &&
         lhs.giphyMediaId == rhs.giphyMediaId &&
@@ -154,7 +100,7 @@ public struct Recording: Codable, Hashable, Sendable {
 public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
     public static func == (lhs: ReplyMessage, rhs: ReplyMessage) -> Bool {
         lhs.id == rhs.id &&
-        lhs.user == rhs.user &&
+        lhs.messageRole == rhs.messageRole &&
         lhs.createdAt == rhs.createdAt &&
         lhs.text == rhs.text &&
         lhs.attachments == rhs.attachments &&
@@ -162,7 +108,7 @@ public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
     }
 
     public var id: String
-    public var user: User
+    public var messageRole: MessageRole
     public var createdAt: Date
 
     public var text: String
@@ -170,14 +116,14 @@ public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
     public var recording: Recording?
 
     public init(id: String,
-                user: User,
+                messageRole: MessageRole,
                 createdAt: Date,
                 text: String = "",
                 attachments: [Attachment] = [],
                 recording: Recording? = nil) {
 
         self.id = id
-        self.user = user
+        self.messageRole = messageRole
         self.createdAt = createdAt
         self.text = text
         self.attachments = attachments
@@ -185,13 +131,13 @@ public struct ReplyMessage: Codable, Identifiable, Hashable, Sendable {
     }
 
     func toMessage() -> Message {
-        Message(id: id, user: user, createdAt: createdAt, text: text, attachments: attachments, recording: recording)
+        Message(id: id, messageRole: messageRole, createdAt: createdAt, text: text, attachments: attachments, recording: recording)
     }
 }
 
 public extension Message {
 
     func toReplyMessage() -> ReplyMessage {
-        ReplyMessage(id: id, user: user, createdAt: createdAt, text: text, attachments: attachments, recording: recording)
+        ReplyMessage(id: id, messageRole: messageRole, createdAt: createdAt, text: text, attachments: attachments, recording: recording)
     }
 }

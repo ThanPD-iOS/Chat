@@ -20,14 +20,14 @@ public enum ReactionType: Codable, Equatable, Hashable, Sendable {
 
 public struct Reaction: Codable, Identifiable, Hashable, Sendable {
     public let id: String
-    public let user: User
+    public let messageRole: MessageRole
     public let createdAt: Date
     public let type: ReactionType
     public var status: Status
 
-    public init(id: String = UUID().uuidString, user: User, createdAt: Date = .now, type: ReactionType, status: Status = .sending) {
+    public init(id: String = UUID().uuidString, messageRole: MessageRole, createdAt: Date = .now, type: ReactionType, status: Status = .sending) {
         self.id = id
-        self.user = user
+        self.messageRole = messageRole
         self.createdAt = createdAt
         self.type = type
         self.status = status

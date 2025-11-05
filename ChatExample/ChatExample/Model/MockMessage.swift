@@ -9,7 +9,6 @@ struct MockMessage: Sendable {
     let uid: String
     let sender: MockUser
     let createdAt: Date
-    var status: Message.Status?
 
     let text: String
     let images: [MockImage]
@@ -20,11 +19,10 @@ struct MockMessage: Sendable {
 }
 
 extension MockMessage {
-    func toChatMessage() -> ExyteChat.Message {
+    func toChatMessage(messageRole: MessageRole) -> ExyteChat.Message {
         ExyteChat.Message(
             id: uid,
-            user: sender.toChatUser(),
-            status: status,
+            messageRole: messageRole,
             createdAt: createdAt,
             text: text,
             attachments: images.map { $0.toChatAttachment() } + videos.map { $0.toChatAttachment() },
