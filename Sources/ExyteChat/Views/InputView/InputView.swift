@@ -126,7 +126,7 @@ struct InputView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding(.horizontal, Constants.marginSpacingInterface)
         .padding(.top, 8)
-        .padding(.bottom, 4)
+        .padding(.bottom, 8)
         .background(.white)
         .onAppear {
             viewModel.recordingPlayer = recordingPlayer
