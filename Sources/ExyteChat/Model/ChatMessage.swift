@@ -30,7 +30,7 @@ public struct ChatMessage: Identifiable, Hashable, Sendable {
     public var recording: Recording?
     public var replyMessage: ReplyMessage?
 
-    public init(id: String,
+    public init(id: String = UUID().uuidString,
                 messageRole: MessageRole,
                 conversationId: UUID = UUID(),
                 content: String = "",
